@@ -11,9 +11,11 @@ from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes,throttle_classes
 
 from rest_framework.throttling import SimpleRateThrottle
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.views import APIView
 
 class MySimpleRateThrottle(SimpleRateThrottle):
-    # THROTTLE_RATES = super(self).THROTTLE_RATES = "'user': '3/min'"
+    
     rate ='3/min'
     scope = None
     
@@ -42,17 +44,7 @@ class UserView(viewsets.ViewSet):
         serializer = UserSerializer(queryset, many=True)
         return Response(serializer.data)
     
-@api_view(['GET'])
-@permission_classes([permissions.IsAuthenticated])
-def search_friends(request, search):
-    from_user = request.user
-    if search == 1:pass
-    serializer = Friendship.objects.all().filter(from_user=from_user,status='accepted')
-    return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-
-from rest_framework.pagination import PageNumberPagination
-from rest_framework.views import APIView
 class UserPagination(PageNumberPagination):
     page_size = 10
     page_size_query_param = 'page_size'
@@ -71,9 +63,7 @@ class UserSearchView(APIView):
                 users = User.objects.filter(email__iexact=keyword).exclude(username=current_user)
             else:
                 users = User.objects.filter(username__icontains=keyword).exclude(username=current_user)
-        # else:
-        #     users = User.objects.none()
-
+        
         paginator = self.pagination_class()
         page = paginator.paginate_queryset(users, request)
 
