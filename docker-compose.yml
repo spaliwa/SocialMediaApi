@@ -1,0 +1,13 @@
+services:
+  
+  social_media_api:
+    build: .
+    ports:
+      - "8000:8000"
+    image: social_media_api:social_media
+    container_name: social_media_container
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver"
+    
