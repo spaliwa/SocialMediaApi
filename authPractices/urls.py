@@ -4,7 +4,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from social import views
 
-from social.views import MyObtainTokenPairView, RegisterView, UserView 
+from social.views import MyObtainTokenPairView, RegisterView, UserView, UserSearchView
 from rest_framework_simplejwt.views import TokenRefreshView
 
 from drf_spectacular.views import SpectacularAPIView,SpectacularSwaggerView
@@ -31,8 +31,10 @@ urlpatterns += [
     path('friend/list_friends',views.list_friends),
     path('friend/list_pending_requests',views.list_pending_friend_requests),
     path('friend/send_friend_request/<int:pk>',views.send_friend_request),
+    path('user/List_friends/<str:keyword>', UserSearchView.as_view(), name='list_friends'),
     
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     path("api/schema/docs/", SpectacularSwaggerView.as_view(url_name="schema")),
+    
 
 ]
