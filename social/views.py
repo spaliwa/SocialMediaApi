@@ -9,7 +9,6 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework.decorators import api_view, permission_classes,throttle_classes
-
 from rest_framework.throttling import SimpleRateThrottle
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.views import APIView
@@ -63,7 +62,6 @@ class UserSearchView(APIView):
     permission_classes = [permissions.IsAuthenticated]
     pagination_class = UserPagination
     
-    # def get(self, request,keyword):
     def get(self, request):
         '''
         Search Users
@@ -136,7 +134,6 @@ def reject_friend_request(request, pk):
     '''
         reject Friend Request of other Users
     '''
-
     try:
         friendship = Friendship.objects.get(pk=pk)
     except:
