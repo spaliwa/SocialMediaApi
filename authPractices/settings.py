@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'social',
     'rest_framework',
     'drf_spectacular',
+    'rest_framework_simplejwt'
 ]
 
 REST_FRAMEWORK = {
@@ -48,21 +49,23 @@ REST_FRAMEWORK = {
         
     ],
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    # 'DEFAULT_THROTTLE_CLASSES': [
-    #     'rest_framework.throttling.UserRateThrottle'
-    # ],
-    # 'DEFAULT_THROTTLE_RATES': {
-    #     'user': '3/min'
-    # }
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 10
+    
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    # 'PAGE_SIZE': 10
 }
+from datetime import timedelta
 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=20),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
 
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Social Media Application',
-    'DESCRIPTION': 'This project is for assignment',
+    'DESCRIPTION': 'This project is a social networking API built with Django Rest Framework (DRF). It includes user authentication (signup/login), user search by email or name with pagination, friend request management (send, accept, reject), listing friends and pending requests, and rate limiting on friend requests. It is containerized using Docker.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }

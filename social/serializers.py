@@ -1,21 +1,20 @@
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import Friendship
+from django.contrib.auth.models import User
+from rest_framework import serializers 
+from django.contrib.auth.models import User
+from rest_framework.validators import UniqueValidator
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
-
     
     def get_token(cls, user):
         token = super(MyTokenObtainPairSerializer, cls).get_token(user)
-
-        # Add custom claims
         token['username'] = user.username
         return token
     
-from rest_framework import serializers
-from django.contrib.auth.models import User
-from rest_framework.validators import UniqueValidator
-from django.contrib.auth.password_validation import validate_password
 
+   
 
 class RegisterSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
@@ -23,7 +22,7 @@ class RegisterSerializer(serializers.ModelSerializer):
             validators=[UniqueValidator(queryset=User.objects.all())]
             )
 
-    password = serializers.CharField(write_only=True, required=True, validators=[validate_password])
+    password = serializers.CharField(write_only=True, required=True)
     
 
     class Meta:
@@ -56,26 +55,21 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['username','email']
 
+
+
 class FriendshipSerializer(serializers.ModelSerializer):
-    user_from_details = serializers.SerializerMethodField()
-    user_to_details = serializers.SerializerMethodField()
+    ReqSentFromUserdetails = serializers.SerializerMethodField()
+    ReqSenttoUserdetails = serializers.SerializerMethodField()
 
     class Meta:
         model = Friendship
-        fields = ['id', 'from_user', 'to_user', 'created_at', 'user_from_details', 'user_to_details']
+        fields = ['id', 'from_user', 'to_user', 'created_at', 'ReqSentFromUserdetails', 'ReqSenttoUserdetails']
 
-    def get_user_from_details(self, obj):
+    def get_ReqSentFromUserdetails(self, obj):
         return UserSerializer(obj.from_user).data
 
-    def get_user_to_details(self, obj):
+    def get_ReqSenttoUserdetails(self, obj):
         return UserSerializer(obj.to_user).data
-    
-    
-    # def get_user(self,instance):
-    #     instance = instance.
-    #     pass
-    # class Meta:
-    #     model = Friendship
-    #     fields = '__all__'
+
 
 
